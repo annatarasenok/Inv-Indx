@@ -1,0 +1,12 @@
+import wikipedia
+f_name1 = "GitHub"
+f_name2 = "Wikipedia"
+url1 = wikipedia.page(f_name1)
+url2 = wikipedia.page(f_name2)
+lst1 = list(wikipedia.summary(f_name1))
+lst2 = list(wikipedia.summary(f_name2))
+
+inv_index = dict()
+index_adder(standartisator(list(wikipedia.summary(f_name1))),url1)
+index_adder(standartisator(list(wikipedia.summary(f_name2))),url2)
+print(inv_index)
