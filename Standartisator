@@ -1,0 +1,36 @@
+def standartisator(lst):
+    for i in range(len(lst)):
+        if lst[i] == "." or lst[i] == "," or lst[i] == '(' or lst[i] == ')':
+            lst[i] = " ";
+    lst = ''.join(lst).lower().split("  ")
+
+    it = 0;
+    while it != len(lst):
+        lst[it] = lst[it].split(" ")
+        it=it+1
+
+    flat_list = []
+    for sublist in lst:
+        for item in sublist:
+            flat_list.append(item)
+
+    while True:
+        try:
+            flat_list.remove('')
+        except:
+            break
+
+    word_dict = dict()
+    while len(flat_list)>0:
+        word_dict[flat_list[0]] = flat_list.count(flat_list[0])
+        deleted_one = flat_list[0]
+        while True:
+            try:
+                flat_list.remove(deleted_one)
+            except:
+                break
+    sorted_keys = sorted(word_dict, key=word_dict.get)
+    sorted_dict = {}
+    for w in sorted_keys:
+        sorted_dict[w] = word_dict[w]
+    return(sorted_dict)
