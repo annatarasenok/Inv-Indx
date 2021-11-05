@@ -1,0 +1,15 @@
+#s_d = standartisator(list(wikipedia.summary(f_name)))
+#f_n = url1
+def index_adder(s_d, f_n):
+    for i in s_d:
+        try: #Если уже есть такое слово
+            inv_index[i]
+            temp_dict = dict([(str(f_n.url),s_d[i])])
+            inv_index[i] = {**inv_index[i], **temp_dict}
+            sorted_keys = sorted(inv_index[i], key=inv_index[i].get)
+            sorted_dict = {}
+            for w in sorted_keys:
+                sorted_dict[w] = inv_index[i][w]
+            inv_index[i] = sorted_dict #Провожу Сортировку после добавления нового индекса
+        except: #Если нет такого слова
+            inv_index[str(i)] = dict([(f_n.url,s_d[i])])
