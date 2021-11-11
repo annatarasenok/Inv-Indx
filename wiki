@@ -1,0 +1,28 @@
+"""
+Функция скачивает архив из базы данных википедии, разархивирует его и удаляет исходный архив
+На выходе получается файл со списком названий всех страниц википедии
+"""
+
+
+
+import requests
+import gzip
+import shutil
+import os
+
+def db():
+    lang = input('укажите язык, например: "ru", "en", "fr" ')
+    
+    f=open("wiki_title_db_" + lang + ".gz","wb")
+    ufr = requests.get("http://dumps.wikimedia.org/" + lang + "wiki/latest/" + lang + "wiki-latest-all-titles-in-ns0.gz")
+    f.write(ufr.content) 
+    f.close()
+
+    with gzip.open("wiki_title_db_" + lang + ".gz", 'rb') as f_in:
+        with open("wiki_title_db", 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+
+    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "wiki_title_db_" + lang + ".gz")
+    os.remove(path)
+
+db()
