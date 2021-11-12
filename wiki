@@ -1,0 +1,40 @@
+import requests
+import gzip
+import shutil
+import os
+import codecs
+import inspect
+
+
+src_file_path = inspect.getfile(lambda: None)
+
+def db():
+    lang = input('укажите язык, например: "ru", "en", "fr" ')
+    
+    f=open("wiki_title_db_" + lang + ".gz","wb")
+    ufr = requests.get("http://dumps.wikimedia.org/" + lang + "wiki/latest/" + lang + "wiki-latest-all-titles-in-ns0.gz")
+    f.write(ufr.content) 
+    f.close()
+
+    with gzip.open("wiki_title_db_" + lang + ".gz", 'rb') as f_in:
+        with open("wiki_title_db", 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+
+    path = os.path.join(os.path.abspath(os.path.dirname(src_file_path)), "wiki_title_db_" + lang + ".gz")
+    os.remove(path)
+
+db()
+
+
+"""
+Вторая часть программы перезаписывает содержимое файла в список для удобства и позваляет работать не со всем списком а с его срезом
+"""
+
+
+listf = list()
+
+with codecs.open("wiki_title_db", "r", "utf_8_sig" ) as file:
+    for line in file:
+        listf.append(line.rstrip('\n'))
+
+print(listf[1:3]) # можно сделать ввод с клавиатуры если будет нужно 
