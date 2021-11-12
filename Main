@@ -1,3 +1,5 @@
+# Код объединяющий все функции в одно дело.
+
 import wikipedia
 f_name1 = "GitHub"
 f_name2 = "Wikipedia"
