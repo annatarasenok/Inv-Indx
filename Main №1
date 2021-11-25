@@ -1,0 +1,98 @@
+import wikipedia
+f_name1 = "GitHub"
+f_name2 = "Wikipedia"
+
+#Считывание уже полученных данных
+data_file = open("data_sites.txt", "r")
+data_from_file = data_file.read()
+data_file.close()
+#Разделяю их для дальнейшего использования
+split_data_from_file = data_from_file.split('\n')
+
+
+#Создание пустого словаря для дольнейшего заполнения
+inv_index = dict()
+
+used_url = []
+
+
+#Функция для стандартизирования информации, получения словаря из слов, в котором ключи - сами слова, частота их встречи в тексте - значения
+def standartisator(summary):
+    lst = list(summary)
+    for i in range(len(lst)):
+        if lst[i] == "." or lst[i] == "," or lst[i] == '(' or lst[i] == ')':
+            lst[i] = " ";
+    lst = ''.join(lst).lower().split("  ")
+
+    it = 0;
+    while it != len(lst):
+        lst[it] = lst[it].split(" ")
+        it=it+1
+
+    flat_list = []
+    for sublist in lst:
+        for item in sublist:
+            flat_list.append(item)
+
+    while True:
+        try:
+            flat_list.remove('')
+        except:
+            break
+
+    word_dict = dict()
+    while len(flat_list)>0:
+        word_dict[flat_list[0]] = flat_list.count(flat_list[0])
+        deleted_one = flat_list[0]
+        while True:
+            try:
+                flat_list.remove(deleted_one)
+            except:
+                break
+    sorted_keys = sorted(word_dict, key=word_dict.get)
+    sorted_dict = {}
+    for w in sorted_keys:
+        sorted_dict[w] = word_dict[w]
+    return(sorted_dict)
+    
+    
+    
+# Функция для добавления в глобальную переменную inv_index новых значений
+#s_d = standartisator(wikipedia.summary(f_name))
+#f_n = url1
+def index_adder(s_d, f_n):
+    if f_n.url in used_url:
+        None
+    else:
+        used_url.append(f_n.url)
+        for i in s_d:
+            try: #Если уже есть такое слово
+                inv_index[i]
+                temp_dict = dict([(str(f_n.url),s_d[i])])
+                inv_index[i] = {**inv_index[i], **temp_dict}
+                sorted_keys = sorted(inv_index[i], key=inv_index[i].get)
+                sorted_dict = {}
+                for w in sorted_keys:
+                    sorted_dict[w] = inv_index[i][w]
+                inv_index[i] = sorted_dict #Провожу Сортировку после добавления нового индекса
+            except: #Если нет такого слова
+                inv_index[str(i)] = dict([(f_n.url,s_d[i])])
+                
+# main
+
+
+#Для безопасности (временно)
+shortenAndSplit_data_from_file = split_data_from_file[1:100]
+
+for name in shortenAndSplit_data_from_file:
+    errNum = 0
+    try:
+        wikipedia.summary(name)
+        index_adder(standartisator(wikipedia.summary(name)),wikipedia.page(name))
+    except:
+        errNum = errNum + 1
+print(errNum)
+
+data_index_file = open("inv_index_data.json", "w")
+json.dump(inv_index, data_index_file)
+data_index_file.close()
