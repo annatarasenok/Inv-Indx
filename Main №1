@@ -1,7 +1,5 @@
 import wikipedia
 import json
-f_name1 = "GitHub"
-f_name2 = "Wikipedia"
 
 #Считывание уже полученных данных
 data_file = open("data_sites.txt", "r")
