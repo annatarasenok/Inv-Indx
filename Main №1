@@ -17,10 +17,14 @@ used_url = []
 
 #Функция для стандартизирования информации, получения словаря из слов, в котором ключи - сами слова, частота их встречи в тексте - значения
 def standartisator(summary):
-    lst = list(summary)
+    lst = summary.replace('\n', '')
+    lst = list(lst)
+    marks = '''!()-[]{};?@#$%:'"\,./^&;*_'''
+    
     for i in range(len(lst)):
-        if lst[i] == "." or lst[i] == "," or lst[i] == '(' or lst[i] == ')':
+        if lst[i] in marks:
             lst[i] = " ";
+    # Удеаление всех знаков препинания
     lst = ''.join(lst).lower().split("  ")
 
     it = 0;
@@ -77,11 +81,16 @@ def index_adder(s_d, f_n):
             except: #Если нет такого слова
                 inv_index[str(i)] = dict([(f_n.url,s_d[i])])
                 
-# main
+# main №1 Для создания БД
 
+inv_index = dict()
 
-#Для безопасности (временно)
-shortenAndSplit_data_from_file = split_data_from_file[1:100]
+used_url = []
+
+#Считываю уже записанные данные о страничках в файле
+
+#Для безопасности (временной)
+shortenAndSplit_data_from_file = split_data_from_file[1:1000]
 
 for name in shortenAndSplit_data_from_file:
     errNum = 0
