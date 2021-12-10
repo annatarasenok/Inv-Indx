@@ -43,9 +43,11 @@ def standart(searc):
 
 search = standart(input('Введите запрос:'))
 
+search_results_list = list()
 
-for key in dictionary.keys():
-    for word in search:
+for word in search:
+    search_res_temp = list()
+    for key in dictionary.keys():
         wordlist = list(word)
         keylist = list(key)
         [i for i in keylist if not i in wordlist or wordlist.remove(i)]
@@ -68,32 +70,15 @@ for key in dictionary.keys():
             if x in marks:  
                 wordstr_r = wordstr_r.replace(x, "")
         
-        if (len(wordstr) + len(wordstr_r)) <= 2:
-            print(dictionary.get(key))
-            print(key)
-            print(word)
-
-
-# In[17]:
-
-
-
-
-
-# In[18]:
-
-
-
-
-
-# In[40]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
+        if (len(wordstr) + len(wordstr_r)) == 0:
+            search_res_temp.extend(list(dictionary.get(key).keys()))
+            
+    search_results_list.append(search_res_temp)
+result = search_results_list[0]
+if len(search_results_list) > 1:
+    for i in range(len(search_results_list) - 1):
+        result = list(set(result) & set(search_results_list[i+1]))
+    print(result)
+else:
+    print(result)
+            
