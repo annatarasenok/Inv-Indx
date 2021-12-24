@@ -37,4 +37,5 @@ with codecs.open("wiki_title_db", "r", "utf_8_sig" ) as file:
     for line in file:
         listf.append(line.rstrip('\n'))
 
-print(listf[1:3]) # можно сделать ввод с клавиатуры если будет нужно 
+n = int(input("Введите количество элементов: "))
+print(random.sample(listf, n))
