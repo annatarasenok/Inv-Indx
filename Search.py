@@ -1,16 +1,12 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[16]:
-
-
 import json
+import math
 import ast
-data_file = open("inv_index_data_10000.json", "r")
+data_file = open("inv_index_data_10000.json", "r") # Считываю ранее созданную БД
 data_from_file = data_file.read()
 data_file.close()
 dictionary = ast.literal_eval(data_from_file)
 
+# Функция для обработки запроса
 
 def standart(searc):
     lst = searc.replace('\n', '')
@@ -41,16 +37,18 @@ def standart(searc):
     return(flat_list)
 
 
-search = standart(input('Введите запрос:'))
+search = standart(input('Введите запрос:')) #Ввод и аброботка запроса
 
 search_results_list = list()
 
+
+
 for word in search:
-    search_res_temp = list()
+    search_res_temp = list() # Нахождение Части результата запроса
     for key in dictionary.keys():
         wordlist = list(word)
         keylist = list(key)
-        [i for i in keylist if not i in wordlist or wordlist.remove(i)]
+        [i for i in keylist if not i in wordlist or wordlist.remove(i)] # Нахождение совпадения по-буквенно дважды
         
         marks = '''!()-[]{};?@#$%:'"\,./^&;*_'''
         wordstr = str(wordlist)
@@ -69,16 +67,17 @@ for word in search:
         for x in wordstr_r:  
             if x in marks:  
                 wordstr_r = wordstr_r.replace(x, "")
-        
-        if (len(wordstr) + len(wordstr_r)) == 0:
-            search_res_temp.extend(list(dictionary.get(key).keys()))
+        default = -1 # Тут можно определить точность нахождения слова в буквах (отличается 1 буква или более)
+        if default == -1: # При значении -1 определяется *динамически*
+            if len(wordstr) + len(wordstr_r) <= math.floor(len(list(word))/5):  
+                search_res_temp.extend(list(dictionary.get(key).keys()))
+        else:
+            if len(wordstr) + len(wordstr_r) <= default*2:  
+                search_res_temp.extend(list(dictionary.get(key).keys()))
             
     search_results_list.append(search_res_temp)
 result = search_results_list[0]
 if len(search_results_list) > 1:
     for i in range(len(search_results_list) - 1):
         result = list(set(result) & set(search_results_list[i+1]))
-    print(result)
-else:
-    print(result)
-            
+print(result)
